@@ -1,9 +1,9 @@
 repeat task.wait() until game.IsLoaded
 repeat task.wait() until game.GameId ~= 0
 
-if Parvus and Parvus.Loaded then
-    Parvus.Utilities.UI:Push({
-        Title = "Parvus Hub",
+if Parvuss and Parvuss.Loaded then
+    Parvuss.Utilities.UI:Push({
+        Title = "Parvuss Hub",
         Description = "Script already running!",
         Duration = 5
     }) return
@@ -11,7 +11,7 @@ end
 
 --[[if Parvus and (Parvus.Game and not Parvus.Loaded) then
     Parvus.Utilities.UI:Push({
-        Title = "Parvus Hub",
+        Title = "Parvuss Hub",
         Description = "Something went wrong!",
         Duration = 5
     }) return
@@ -26,8 +26,8 @@ local Branch, NotificationTime, IsLocal = ...
 local QueueOnTeleport = queue_on_teleport
 
 local function GetFile(File)
-    return IsLocal and readfile("Parvus/" .. File)
-    or game:HttpGet(("%s%s"):format(Parvus.Source, File))
+    return IsLocal and readfile("Parvuss/" .. File)
+    or game:HttpGet(("%s%s"):format(Parvuss.Source, File))
 end
 
 local function LoadScript(Script)
@@ -35,17 +35,17 @@ local function LoadScript(Script)
 end
 
 local function GetGameInfo()
-    for Id, Info in pairs(Parvus.Games) do
+    for Id, Info in pairs(Parvuss.Games) do
         if tostring(game.GameId) == Id then
             return Info
         end
     end
 
-    return Parvus.Games.Universal
+    return Parvuss.Games.Universal
 end
 
-getgenv().Parvus = {
-    Source = "https://raw.githubusercontent.com/AlexR32/Parvus/" .. Branch .. "/",
+getgenv().Parvuss = {
+    Source = "https://github.com/HXKDE/Parvuss/" .. Branch .. "/",
 
     Games = {
         ["Universal" ] = { Name = "Universal",                  Script = "Universal"  },
@@ -61,30 +61,30 @@ getgenv().Parvus = {
     }
 }
 
-Parvus.Utilities = LoadScript("Utilities/Main")
-Parvus.Utilities.UI = LoadScript("Utilities/UI")
-Parvus.Utilities.Physics = LoadScript("Utilities/Physics")
-Parvus.Utilities.Drawing = LoadScript("Utilities/Drawing")
+Parvuss.Utilities = LoadScript("Utilities/Main")
+Parvuss.Utilities.UI = LoadScript("Utilities/UI")
+Parvuss.Utilities.Physics = LoadScript("Utilities/Physics")
+Parvuss.Utilities.Drawing = LoadScript("Utilities/Drawing")
 
-Parvus.Cursor = GetFile("Utilities/ArrowCursor.png")
-Parvus.Loadstring = GetFile("Utilities/Loadstring")
-Parvus.Loadstring = Parvus.Loadstring:format(
-    Parvus.Source, Branch, NotificationTime, tostring(IsLocal)
+Parvuss.Cursor = GetFile("Utilities/ArrowCursor.png")
+Parvuss.Loadstring = GetFile("Utilities/Loadstring")
+Parvuss.Loadstring = Parvus.Loadstring:format(
+    Parvuss.Source, Branch, NotificationTime, tostring(IsLocal)
 )
 
 LocalPlayer.OnTeleport:Connect(function(State)
     if State == Enum.TeleportState.InProgress then
         --ClearTeleportQueue()
-        QueueOnTeleport(Parvus.Loadstring)
+        QueueOnTeleport(Parvuss.Loadstring)
     end
 end)
 
-Parvus.Game = GetGameInfo()
-LoadScript(Parvus.Game.Script)
-Parvus.Loaded = true
+Parvuss.Game = GetGameInfo()
+LoadScript(Parvuss.Game.Script)
+Parvuss.Loaded = true
 
-Parvus.Utilities.UI:Push({
-    Title = "Parvus Hub",
-    Description = Parvus.Game.Name .. " loaded!\n\nThis script is open sourced\nIf you have paid for this script\nOr had to go thru ads\nYou have been scammed.",
+Parvuss.Utilities.UI:Push({
+    Title = "Parvuss Hub",
+    Description = Parvuss.Game.Name .. " loaded!\n\nThis script is open sourced\nIf you have paid for this script\nOr had to go thru ads\nYou have been scammed.",
     Duration = NotificationTime
 })
