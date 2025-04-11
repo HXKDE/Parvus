@@ -7,9 +7,9 @@ Made With :heart: By ***@AlexR32***
 
 ### Loadstring
 ```lua
-local IsDevelopmentBranch, NotificationTime = false, 30
+local IsDevelopmentBranch, NotificationTime = false, 10
 local Branch = IsDevelopmentBranch and "development" or "main"
-local Source = "https://raw.githubusercontent.com/AlexR32/Parvus/" .. Branch .. "/"
+local Source = "https://github.com/HXKDE/Parvuss/" .. Branch .. "/"
 loadstring(game:HttpGet(Source .. "Loader.lua"), "Loader")(Branch, NotificationTime)
 
 ```
