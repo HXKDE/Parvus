@@ -54,14 +54,8 @@ local VehicleController = Framework.Classes.VehicleControler
 
 -- dumb krampus error below :scream:
 local Firearm = nil
-repeat
-    pcall(function()
-        setthreadidentity(2)
-        Firearm = require(ReplicatedStorage.Client.Abstracts.ItemInitializers.Firearm)
-    end)
-    task.wait()
-until Firearm
-
+task.spawn(function() setthreadidentity(2) Firearm = require(ReplicatedStorage.Client.Abstracts.ItemInitializers.Firearm) end)
+if not Firearm then LocalPlayer:Kick("Send this error to owner: Firearm module does not exist") return end
 local CharacterCamera = Cameras:GetCamera("Character")
 --local ReticleInterface = Interface:Get("Reticle")
 
@@ -508,7 +502,7 @@ local Window = Parvus.Utilities.UI:Window({
             CharSection:Slider({Name = "", Flag = "AR2/Fly/Speed", Min = 0, Max = 10, Precise = 1, Value = 0.7, Unit = "studs", Wide = true})
             --CharSection:Divider()
             CharSection:Toggle({Name = "Walk Speed", Flag = "AR2/WalkSpeed/Enabled", Value = false}):Keybind({Flag = "AR2/WalkSpeed/Keybind"})
-            CharSection:Slider({Name = "", Flag = "AR2/WalkSpeed/Speed", Min = 0, Max = 1.2, Precise = 0.5, Value = 0.2, Unit = "studs", Wide = true})
+            CharSection:Slider({Name = "", Flag = "AR2/WalkSpeed/Speed", Min = 0, Max = 1.4, Precise = 1, Value = 0.7, Unit = "studs", Wide = true})
             --CharSection:Divider()
             CharSection:Toggle({Name = "Jump Height", Flag = "AR2/JumpHeight/Enabled", Value = false}):Keybind({Flag = "AR2/JumpHeight/Keybind"})
             CharSection:Toggle({Name = "Infinite Jump", Flag = "AR2/JumpHeight/NoFallCheck", Value = false})
@@ -551,7 +545,7 @@ local Window = Parvus.Utilities.UI:Window({
                     Head.CanCollide = Mannequin.Head.CanCollide
                 end
             end})
-            MiscSection:Slider({Name = "Size Mult", Flag = "AR2/HeadExpander/Value", Min = 1, Max = 15, Value = 10, Unit = "x", Wide = true})
+            MiscSection:Slider({Name = "Size Mult", Flag = "AR2/HeadExpander/Value", Min = 1, Max = 20, Value = 10, Unit = "x", Wide = true})
             MiscSection:Slider({Name = "Transparency", Flag = "AR2/HeadExpander/Transparency", Min = 0, Max = 1, Value = 0.5, Precise = 1, Wide = true})
             MiscSection:Divider()
             MiscSection:Toggle({Name = "MeleeAura", Flag = "AR2/MeleeAura", Value = false})
@@ -621,11 +615,12 @@ WallCheckParams.FilterDescendantsInstances = {
 } WallCheckParams.IgnoreWater = true
 
 local function Raycast(Origin, Direction)
-    WallCheckParams.FilterDescendantsInstances = {
-    Workspace.Effects, Workspace.Sounds,
-    Workspace.Locations, Workspace.Spawns,
-    LocalPlayer.Character
-} --print("added character to raycast")
+    if not table.find(WallCheckParams.FilterDescendantsInstances, LocalPlayer.Character) then
+        WallCheckParams.FilterDescendantsInstances = {
+            Workspace.Effects, Workspace.Sounds,
+            Workspace.Locations, Workspace.Spawns,
+            LocalPlayer.Character
+        } --print("added character to raycast")
     end
 
     local RaycastResult = Workspace:Raycast(Origin, Direction, WallCheckParams)
@@ -1077,7 +1072,6 @@ local function HookCharacter(Character)
         end
     end
 
-    if Character.Equip then
     local OldEquip; OldEquip = hookfunction(Character.Equip, newcclosure(function(Self, Item, ...)
         if Item.FireConfig and Item.FireConfig.MuzzleVelocity then
             ProjectileSpeed = Item.FireConfig.MuzzleVelocity * Globals.MuzzleVelocityMod
@@ -1197,7 +1191,11 @@ OldNamecall = hookmetamethod(game, "__namecall", function(Self, ...)
     end
     ]]
 
-    -- [Removed crash bypass freeze for safety] -- 4444 days
+    if Method == "GetChildren"
+    and (Self == ReplicatedFirst
+    or Self == ReplicatedStorage) then
+        print("crash bypass")
+        wait(383961600) -- 4444 days
     end
 
     return OldNamecall(Self, ...)
