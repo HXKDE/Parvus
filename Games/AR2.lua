@@ -224,7 +224,7 @@ local Window = Parvus.Utilities.UI:Window({
     Position = UDim2.new(0.5, -248 * 3, 0.5, -248)
 }) do
 
-    local CombatTab = Window:Tab({Name = "Combat"}) do
+    local CombatTab = Window:Tab({Name = "PVP"}) do
         local AimbotSection = CombatTab:Section({Name = "Aimbot", Side = "Left"}) do
             AimbotSection:Toggle({Name = "Enabled", Flag = "Aimbot/Enabled", Value = false})
             :Keybind({Flag = "Aimbot/Keybind", Value = "MouseButton2", Mouse = true, DisableToggle = true,
@@ -327,7 +327,7 @@ local Window = Parvus.Utilities.UI:Window({
         VisualsSection:Toggle({Name = "Distance Check", Flag = "ESP/Player/DistanceCheck", Value = true})
         VisualsSection:Slider({Name = "Distance", Flag = "ESP/Player/Distance", Min = 25, Max = 10000, Value = 1000, Unit = "studs"})
     end
-    local ESPTab = Window:Tab({Name = "AR2 ESP"}) do
+    local ESPTab = Window:Tab({Name = "AR2 ESP ITP"}) do
         local ItemSection = ESPTab:Section({Name = "Item ESP", Side = "Left"}) do local Items = {}
             ItemSection:Toggle({Name = "Enabled", Flag = "AR2/ESP/Items/Enabled", Value = false})
             ItemSection:Toggle({Name = "Distance Check", Flag = "AR2/ESP/Items/DistanceCheck", Value = true})
