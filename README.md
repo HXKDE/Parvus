@@ -9,7 +9,7 @@ Made With :heart: By ***@AlexR32*** And Recoded by ***@.xseni0***
 ```lua
 local IsDevelopmentBranch, NotificationTime = false, 10
 local Branch = IsDevelopmentBranch and "development" or "main"
-local Source = "https://github.com/HXKDE/Parvuss/" .. Branch .. "/"
+local Source = "https://raw.githubusercontent.com/HXKDE/Parvus/" .. Branch .. "/"
 loadstring(game:HttpGet(Source .. "Loader.lua"), "Loader")(Branch, NotificationTime)
 
 ```
