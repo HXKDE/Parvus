@@ -620,6 +620,7 @@ local function Raycast(Origin, Direction)
         Workspace.Locations, Workspace.Spawns,
         LocalPlayer.Character
     } --print("added character to raycast")
+    end
 
     local RaycastResult = Workspace:Raycast(Origin, Direction, WallCheckParams)
     if RaycastResult then
