@@ -35,7 +35,7 @@ local function LoadScript(Script)
 end
 
 local function GetGameInfo()
-    for Id, Info in pairs(Parvuss.Games) do
+    for Id, Info in pairs(Parvus.Games) do
         if tostring(game.GameId) == Id then
             return Info
         end
@@ -85,6 +85,6 @@ Parvus.Loaded = true
 
 Parvus.Utilities.UI:Push({
     Title = "ParvusRevamped Hub",
-    Description = Parvuss.Game.Name .. " loaded!\n\nThis script is open sourced\nIf you have paid for this script\nOr had to go thru ads\nYou have been scammed.",
+    Description = Parvus.Game.Name .. " loaded!\n\nThis script is open sourced\nIf you have paid for this script\nOr had to go thru ads\nYou have been scammed.",
     Duration = NotificationTime
 })
