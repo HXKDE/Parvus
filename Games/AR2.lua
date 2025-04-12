@@ -254,7 +254,31 @@ local Window = Parvus.Utilities.UI:Window({
             SAFOVSection:Slider({Name = "NumSides", Flag = "SilentAim/FOV/NumSides", Min = 3, Max = 100, Value = 14})
             SAFOVSection:Slider({Name = "Thickness", Flag = "SilentAim/FOV/Thickness", Min = 1, Max = 10, Value = 2})
         end
-    end
+        local MiscSection = MiscTab:Section({Name = "Other", Side = "Left"}) do
+            MiscSection:Toggle({Name = "Head Expander", Flag = "AR2/HeadExpander", Value = false,
+            Callback = function(Bool)
+                if Bool then return end
+                for Index, Player in pairs(PlayerService:GetPlayers()) do
+                    if Player == LocalPlayer then continue end
+                    if not Player.Character then continue end
+                    local Character = Player.Character
+                    local Head = Character.Head
+
+                    Head.Size = Mannequin.Head.Size
+                    Head.Transparency = Mannequin.Head.Transparency
+                    Head.CanCollide = Mannequin.Head.CanCollide
+                end
+            end})
+            MiscSection:Slider({Name = "Size Mult", Flag = "AR2/HeadExpander/Value", Min = 1, Max = 20, Value = 10, Unit = "x", Wide = true})
+            MiscSection:Slider({Name = "Transparency", Flag = "AR2/HeadExpander/Transparency", Min = 0, Max = 1, Value = 0.5, Precise = 1, Wide = true})
+            MiscSection:Toggle({Name = "MeleeAura", Flag = "AR2/MeleeAura", Value = false})
+            MiscSection:Toggle({Name = "Zombie MeleeAura", Flag = "AR2/AntiZombie/MeleeAura", Value = false})
+            MiscSection:Toggle({Name = "Instant Search", Flag = "AR2/InstantSearch", Value = false})
+            --MiscSection:Toggle({Name = "Anti-Zombie", Flag = "AR2/AntiZombie/Enabled", Value = false}):Keybind()
+            --MiscSection:Toggle({Name = "Anti-Zombie MeleeAura", Flag = "AR2/AntiZombie/MeleeAura", Value = false})
+            MiscSection:Toggle({Name = "Map ESP", Flag = "AR2/MapESP", Value = false})
+                end}})
+            end
     local VisualsSection = Parvus.Utilities:ESPSection(Window, "Visuals", "ESP/Player", true, true, true, true, true, false) do
         VisualsSection:Colorpicker({Name = "Ally Color", Flag = "ESP/Player/Ally", Value = {0.3333333432674408, 0.6666666269302368, 1, 0, false}})
         VisualsSection:Colorpicker({Name = "Enemy Color", Flag = "ESP/Player/Enemy", Value = {1, 0.6666666269302368, 1, 0, false}})
@@ -357,7 +381,6 @@ local Window = Parvus.Utilities.UI:Window({
             RecoilSection:Divider()
             RecoilSection:Toggle({Name = "Recoil Control", Flag = "AR2/Recoil/Enabled", Value = false})
             RecoilSection:Slider({Name = "Recoil", Flag = "AR2/Recoil/Value", Min = 0, Max = 100, Value = 0, Unit = "%"})
-            RecoilSection:Toggle({Name = "No Spread", Flag = "AR2/NoSpread", Value = false})
             --RecoilSection:Toggle({Name = "No Wobble", Flag = "AR2/NoWobble", Value = false})
             RecoilSection:Toggle({Name = "No Camera Flinch", Flag = "AR2/NoFlinch", Value = false})
             RecoilSection:Toggle({Name = "Unlock Firemodes", Flag = "AR2/UnlockFiremodes", Value = false})
@@ -371,73 +394,6 @@ local Window = Parvus.Utilities.UI:Window({
             RecoilSection:Slider({Name = "KickUp Force", Flag = "AR2/Recoil/KickUpForce", Min = 0, Max = 100, Value = 0, Unit = "%"})
             RecoilSection:Slider({Name = "Bob Force", Flag = "AR2/Bob/Force", Min = 0, Max = 100, Value = 0, Unit = "%"})
             RecoilSection:Slider({Name = "Bob Damping", Flag = "AR2/Bob/Damping", Min = 0, Max = 100, Value = 0, Unit = "%"})]]
-        end
-        local MiscSection = MiscTab:Section({Name = "Other", Side = "Right"}) do
-
-            -- Very basic head expander idc
-            MiscSection:Toggle({Name = "Head Expander", Flag = "AR2/HeadExpander", Value = false,
-            Callback = function(Bool)
-                if Bool then return end
-                for Index, Player in pairs(PlayerService:GetPlayers()) do
-                    if Player == LocalPlayer then continue end
-                    if not Player.Character then continue end
-                    local Character = Player.Character
-                    local Head = Character.Head
-
-                    Head.Size = Mannequin.Head.Size
-                    Head.Transparency = Mannequin.Head.Transparency
-                    Head.CanCollide = Mannequin.Head.CanCollide
-                end
-            end})
-            MiscSection:Slider({Name = "Size Mult", Flag = "AR2/HeadExpander/Value", Min = 1, Max = 20, Value = 10, Unit = "x", Wide = true})
-            MiscSection:Slider({Name = "Transparency", Flag = "AR2/HeadExpander/Transparency", Min = 0, Max = 1, Value = 0.5, Precise = 1, Wide = true})
-            MiscSection:Divider()
-            MiscSection:Toggle({Name = "MeleeAura", Flag = "AR2/MeleeAura", Value = false})
-            MiscSection:Toggle({Name = "Zombie MeleeAura", Flag = "AR2/AntiZombie/MeleeAura", Value = false})
-            MiscSection:Toggle({Name = "Container Persistence", Flag = "AR2/ContainerPersistence", Value = false})
-            MiscSection:Toggle({Name = "Instant Search", Flag = "AR2/InstantSearch", Value = false})
-            --MiscSection:Toggle({Name = "Anti-Zombie", Flag = "AR2/AntiZombie/Enabled", Value = false}):Keybind()
-            --MiscSection:Toggle({Name = "Anti-Zombie MeleeAura", Flag = "AR2/AntiZombie/MeleeAura", Value = false})
-            local SpoofSCS = MiscSection:Toggle({Name = "Spoof State", Flag = "AR2/SSCS", Value = false}) SpoofSCS:Keybind()
-            SpoofSCS:Tooltip("SCS - Set Character State:\nNo Fall Damage\nLess Hunger / Thirst\nWhile Sprinting")
-
-            local MoveStates = {}
-            for MoveState, Value in pairs(Framework.Configs.Character.ValidMoveStates) do
-                MoveStates[#MoveStates + 1] = {Name = MoveState, Mode = "Button", Value = false}
-                if MoveState == "Climbing" then MoveStates[#MoveStates].Value = true end
-            end
-            MiscSection:Dropdown({Name = "Move States", Flag = "AR2/MoveState", List = MoveStates})
-            MiscSection:Toggle({Name = "NoClip", Flag = "AR2/NoClip", Value = false,
-            Callback = function(Bool)
-                if Bool and not NoClipEvent then
-                    NoClipEvent = RunService.Stepped:Connect(function()
-                        if not LocalPlayer.Character then return end
-
-                        for Index, Object in pairs(LocalPlayer.Character:GetDescendants()) do
-                            if Object:IsA("BasePart") then
-                                if NoClipObjects[Object] == nil then
-                                    NoClipObjects[Object] = Object.CanCollide
-                                end Object.CanCollide = false
-                            end
-                        end
-                    end)
-                elseif not Bool and NoClipEvent then
-                    NoClipEvent:Disconnect()
-                    NoClipEvent = nil
-
-                    task.wait(0.1)
-                    for Object, CanCollide in pairs(NoClipObjects) do
-                        Object.CanCollide = CanCollide
-                    end table.clear(NoClipObjects)
-                end
-            end}):Keybind()
-            MiscSection:Toggle({Name = "Map ESP", Flag = "AR2/MapESP", Value = false})
-            MiscSection:Toggle({Name = "Staff Join", Flag = "AR2/StaffJoin", Value = false})
-            MiscSection:Dropdown({HideName = true, Flag = "AR2/StaffJoin/List", List = {
-                {Name = "Server Hop", Mode = "Button", Value = false},
-                {Name = "Notify", Mode = "Button", Value = true},
-                {Name = "Kick", Mode = "Button", Value = false}
-            }})
         end
     end Parvus.Utilities:SettingsSection(Window, "RightControl", true)
 end Parvus.Utilities.InitAutoLoad(Window)
@@ -1020,100 +976,16 @@ OldIndex = hookmetamethod(game, "__index", function(Self, Index)
     end
 
     return OldIndex(Self, Index)
-end)
-
-OldNamecall = hookmetamethod(game, "__namecall", function(Self, ...)
-    local Method = getnamecallmethod()
-
-    --[[
-    if Method == "FireServer" then
-        local Args = {...}
-        if type(Args[1]) == "table" then
-            print("framework check")
-            return
-        end
-    end
-    ]]
-
-    if Method == "GetChildren"
-    and (Self == ReplicatedFirst
-    or Self == ReplicatedStorage) then
-        print("crash bypass")
-        wait(383961600) -- 4444 days
-    end
-
-    return OldNamecall(Self, ...)
-end)
-
-local OldSend; OldSend = hookfunction(Network.Send, newcclosure(function(Self, Name, ...)
-    if table.find(SanityBans, Name) then print("bypassed", Name) return end
-    if Name == "Character Jumped" and Window.Flags["AR2/SSCS"] then return end
-
-    if Name == "Vehicle Bumper Impact" then
-        if Window.Flags["AR2/Vehicle/Impact"] then
-            return
-        end
-    end
-
-    if Name == "Inventory Container Group Disconnect" then
-        if Window.Flags["AR2/ContainerPersistence"] then
-            return
-        end
-    end
-
-    --[[if Name == "Bullet Fired" then
-        if Window.Flags["AR2/NoSpread"] then
-            local Args = {...}
-            print(Args[5] == ProjectileDirection)
-            Args[5] = ProjectileSpread --* Vector3.new(-1, -1, 1)
-            return OldSend(Self, Name, unpack(Args))
-        end
-    end]]
-
-    --[[if Name == "Bullet Impact" then
-        print("bullet impact")
-        if Window.Flags["AR2/NoSpread"] then
-            local Args = {...}
-            local Position, Table = CastLocalBulletInstant(ProjectileOrigin, ProjectileDirection2, ProjectileSpread)
-            if not Position then print(Args[1], "miss") return OldSend(Self, Name, ...) end
-
-            --Args[5] = Target
-            print(Args[1], "hit")
-            Args[6] = Position
-            Args[7][1] = Table[1]
-            Args[7][2] = Table[2]
-            Args[7][3] = Table[3]
-
-            return OldSend(Self, Name, unpack(Args))
-        end
-    end]]
-
-    return OldSend(Self, Name, ...)
-end))
-
-local OldFetch; OldFetch = hookfunction(Network.Fetch, newcclosure(function(Self, Name, ...)
-    if table.find(SanityBans, Name) then print("bypassed", Name) return end
-
-    if Name == "Character State Report" then
-        local RandomData = GetStates()
-        local Args = {...}
-
-        for Index = 1, #Args do
-        --for Index, Value in pairs(Args) do
-            --print(Index, RandomData[Index][1], Value)
-            if Window.Flags["AR2/SSCS"] then
-                if RandomData[Index] == "MoveState" then
-                    Args[Index] = Window.Flags["AR2/MoveState"][1]
-                end
-            end
-            if Window.Flags["AR2/NoSpread"] then
-                if RandomData[Index] == "Zooming" then
-                    Args[Index] = true
-                elseif RandomData[Index] == "FirstPerson" then
-                    Args[Index] = true
-                end
+    end)
+end
+if Window.Flags["AR2/NoSpread"] then
+    if RandomData[Index] == "Zooming" then
+        Args[Index] = true
+            elseif RandomData[Index] == "FirstPerson" then
+                Args[Index] = true
             end
         end
+    end
 
         return OldFetch(Self, Name, unpack(Args))
     end
