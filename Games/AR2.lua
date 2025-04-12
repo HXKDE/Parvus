@@ -54,14 +54,8 @@ local VehicleController = Framework.Classes.VehicleControler
 
 -- dumb krampus error below :scream:
 local Firearm = nil
-repeat
-    pcall(function()
-        setthreadidentity(2)
-        Firearm = require(ReplicatedStorage.Client.Abstracts.ItemInitializers.Firearm)
-    end)
-    task.wait()
-until Firearm
-
+task.spawn(function() setthreadidentity(2) Firearm = require(ReplicatedStorage.Client.Abstracts.ItemInitializers.Firearm) end)
+if not Firearm then LocalPlayer:Kick("Send this error to owner: Firearm module does not exist") return end
 local CharacterCamera = Cameras:GetCamera("Character")
 --local ReticleInterface = Interface:Get("Reticle")
 
@@ -1076,7 +1070,6 @@ local function HookCharacter(Character)
         end
     end
 
-    if Character.Equip then
     local OldEquip; OldEquip = hookfunction(Character.Equip, newcclosure(function(Self, Item, ...)
         if Item.FireConfig and Item.FireConfig.MuzzleVelocity then
             ProjectileSpeed = Item.FireConfig.MuzzleVelocity * Globals.MuzzleVelocityMod
@@ -1196,7 +1189,11 @@ OldNamecall = hookmetamethod(game, "__namecall", function(Self, ...)
     end
     ]]
 
-    -- [Removed crash bypass freeze for safety] -- 4444 days
+    if Method == "GetChildren"
+    and (Self == ReplicatedFirst
+    or Self == ReplicatedStorage) then
+        print("crash bypass")
+        wait(383961600) -- 4444 days
     end
 
     return OldNamecall(Self, ...)
