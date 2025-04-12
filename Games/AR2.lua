@@ -622,24 +622,24 @@ WallCheckParams.FilterDescendantsInstances = {
 
 local function Raycast(Origin, Direction)
     WallCheckParams.FilterDescendantsInstances = {
-    Workspace.Effects, Workspace.Sounds,
-    Workspace.Locations, Workspace.Spawns,
-    LocalPlayer.Character
-} --print("added character to raycast")
-    end
+        Workspace.Effects, Workspace.Sounds,
+        Workspace.Locations, Workspace.Spawns,
+        LocalPlayer.Character
+    } --print("added character to raycast")
 
     local RaycastResult = Workspace:Raycast(Origin, Direction, WallCheckParams)
     if RaycastResult then
         if (RaycastResult.Instance.Transparency == 1
-        and RaycastResult.Instance.CanCollide == false)
-        or (CollectionService:HasTag(RaycastResult.Instance, "Bullets Penetrate")
-        or CollectionService:HasTag(RaycastResult.Instance, "Window Part")
-        or CollectionService:HasTag(RaycastResult.Instance, "World Mesh")
-        or CollectionService:HasTag(RaycastResult.Instance, "World Water Part")) then
+            and RaycastResult.Instance.CanCollide == false)
+            or (CollectionService:HasTag(RaycastResult.Instance, "Bullets Penetrate")
+            or CollectionService:HasTag(RaycastResult.Instance, "Window Part")
+            or CollectionService:HasTag(RaycastResult.Instance, "World Mesh")
+            or CollectionService:HasTag(RaycastResult.Instance, "World Water Part")) then
             return true
         end
     end
 end
+
 local function InEnemyTeam(Enabled, Player)
     if not Enabled then return true end
     if SquadData and SquadData.Members then
