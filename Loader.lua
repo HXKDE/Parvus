@@ -3,7 +3,7 @@ repeat task.wait() until game.GameId ~= 0
 
 if Parvus and Parvus.Loaded then
     Parvus.Utilities.UI:Push({
-        Title = "ParvusRevamped Hub",
+        Title = "Parvus Hub",
         Description = "Script already running!",
         Duration = 5
     }) return
@@ -11,7 +11,7 @@ end
 
 --[[if Parvus and (Parvus.Game and not Parvus.Loaded) then
     Parvus.Utilities.UI:Push({
-        Title = "ParvusRevamped Hub",
+        Title = "Parvus Hub",
         Description = "Something went wrong!",
         Duration = 5
     }) return
@@ -45,7 +45,7 @@ local function GetGameInfo()
 end
 
 getgenv().Parvus = {
-    Source = "https://github.com/HXKDE/Parvus/" .. Branch .. "/",
+    Source = "https://raw.githubusercontent.com/HXKDE/Parvus/" .. Branch .. "/",
 
     Games = {
         ["Universal" ] = { Name = "Universal",                  Script = "Universal"  },
@@ -84,7 +84,7 @@ LoadScript(Parvus.Game.Script)
 Parvus.Loaded = true
 
 Parvus.Utilities.UI:Push({
-    Title = "ParvusRevamped Hub",
+    Title = "Parvus Hub",
     Description = Parvus.Game.Name .. " loaded!\n\nThis script is open sourced\nIf you have paid for this script\nOr had to go thru ads\nYou have been scammed.",
     Duration = NotificationTime
 })
