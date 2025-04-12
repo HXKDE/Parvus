@@ -52,74 +52,6 @@ local Maids = Framework.Classes.Maids
 local Animators = Framework.Classes.Animators
 local VehicleController = Framework.Classes.VehicleControler
 
--- dumb krampus error below :scream:
-local Firearm = nil
-task.spawn(function() setthreadidentity(2) Firearm = require(ReplicatedStorage.Client.Abstracts.ItemInitializers.Firearm) end)
-if not Firearm then LocalPlayer:Kick("Send this error to owner: Firearm module does not exist") return end
-local CharacterCamera = Cameras:GetCamera("Character")
---local ReticleInterface = Interface:Get("Reticle")
-
-local Events = getupvalue(Network.Add, 1)
---local EventsQueue = getupvalue(Network.Add, 2)
-local GetSpreadAngle = getupvalue(Bullets.Fire, 1)
-local GetSpreadVector = getupvalue(Bullets.Fire, 3)
-local CastLocalBullet = getupvalue(Bullets.Fire, 4)
-local GetFireImpulse = getupvalue(Bullets.Fire, 6)
-local LightingState = getupvalue(Lighting.GetState, 1)
---local RenderSettings = getupvalue(World.GetDistance, 1)
-local AnimatedReload = getupvalue(Firearm, 7)
-
-local SetWheelSpeeds = getupvalue(VehicleController.Step, 2)
-local SetSteerWheels = getupvalue(VehicleController.Step, 3)
---local ApplyDragForce = getupvalue(VehicleController.Step, 4)
-
-local Effects = getupvalue(CastLocalBullet, 2)
-local Sounds = getupvalue(CastLocalBullet, 3)
-local ImpactEffects = getupvalue(CastLocalBullet, 6)
---local TryRicochet = getupvalue(CastLocalBullet, 10)
-
-if type(Events) == "function" then
-    Events = getupvalue(Network.Add, 2)
-end
-
-local NetworkSyncHeartbeat
-local InteractHeartbeat, FindItemData
-for Index, Table in pairs(getgc(true)) do
-    if type(Table) == "table" and rawget(Table, "Rate") == 0.05 then
-        InteractHeartbeat = Table.Action
-        FindItemData = getupvalue(InteractHeartbeat, 11)
-    end
-end
-
-local ProjectileSpeed = 1000
-local ProjectileOrigin = Vector3.new(0, 0, 0)
-local ProjectileDirection = Vector3.new(0, 0, 0)
-local ProjectileSpread = Vector3.new(0, 0, 0)
-local ShotMaxDistance = Globals.ShotMaxDistance
-local ProjectileGravity = Globals.ProjectileGravity
-
-local SquadData = nil
-local ItemMemory = {}
-local GroundPart = Instance.new("Part")
-local OldBaseTime = LightingState.BaseTime
-local NoClipObjects, NoClipEvent = {}, nil
-local SetIdentity = setthreadidentity
-
-local AddObject = Instance.new("BindableEvent")
-AddObject.Event:Connect(function(...)
-    Parvus.Utilities.Drawing:AddObject(...)
-end)
-
-local RemoveObject = Instance.new("BindableEvent")
-RemoveObject.Event:Connect(function(...)
-    Parvus.Utilities.Drawing:RemoveObject(...)
-end)
-
---RenderSettings.Loot = 1
---RenderSettings.Elements = 1
---RenderSettings.Detail = -1
---RenderSettings.Terrain = 36
-
 -- game data mess
 local RandomEvents, ItemCategory, ZombieInherits, SanityBans, AdminRoles = {
     {"ATVCrashsiteRenegade01", false},
@@ -615,21 +547,22 @@ WallCheckParams.FilterDescendantsInstances = {
 } WallCheckParams.IgnoreWater = true
 
 local function Raycast(Origin, Direction)
-    WallCheckParams.FilterDescendantsInstances = {
-        Workspace.Effects, Workspace.Sounds,
-        Workspace.Locations, Workspace.Spawns,
-        LocalPlayer.Character
-    } --print("added character to raycast")
+    if not table.find(WallCheckParams.FilterDescendantsInstances, LocalPlayer.Character) then
+        WallCheckParams.FilterDescendantsInstances = {
+            Workspace.Effects, Workspace.Sounds,
+            Workspace.Locations, Workspace.Spawns,
+            LocalPlayer.Character
+        } --print("added character to raycast")
     end
 
     local RaycastResult = Workspace:Raycast(Origin, Direction, WallCheckParams)
     if RaycastResult then
         if (RaycastResult.Instance.Transparency == 1
-            and RaycastResult.Instance.CanCollide == false)
-            or (CollectionService:HasTag(RaycastResult.Instance, "Bullets Penetrate")
-            or CollectionService:HasTag(RaycastResult.Instance, "Window Part")
-            or CollectionService:HasTag(RaycastResult.Instance, "World Mesh")
-            or CollectionService:HasTag(RaycastResult.Instance, "World Water Part")) then
+        and RaycastResult.Instance.CanCollide == false)
+        or (CollectionService:HasTag(RaycastResult.Instance, "Bullets Penetrate")
+        or CollectionService:HasTag(RaycastResult.Instance, "Window Part")
+        or CollectionService:HasTag(RaycastResult.Instance, "World Mesh")
+        or CollectionService:HasTag(RaycastResult.Instance, "World Water Part")) then
             return true
         end
     end
