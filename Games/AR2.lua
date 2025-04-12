@@ -639,7 +639,6 @@ local function Raycast(Origin, Direction)
         end
     end
 end
-
 local function InEnemyTeam(Enabled, Player)
     if not Enabled then return true end
     if SquadData and SquadData.Members then
