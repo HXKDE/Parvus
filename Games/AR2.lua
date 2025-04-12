@@ -254,39 +254,6 @@ local Window = Parvus.Utilities.UI:Window({
             SAFOVSection:Slider({Name = "NumSides", Flag = "SilentAim/FOV/NumSides", Min = 3, Max = 100, Value = 14})
             SAFOVSection:Slider({Name = "Thickness", Flag = "SilentAim/FOV/Thickness", Min = 1, Max = 10, Value = 2})
         end
-        local TriggerSection = CombatTab:Section({Name = "Trigger", Side = "Right"}) do
-            TriggerSection:Toggle({Name = "Enabled", Flag = "Trigger/Enabled", Value = false})
-            :Keybind({Flag = "Trigger/Keybind", Value = "MouseButton2", Mouse = true, DisableToggle = true,
-            Callback = function(Key, KeyDown) Trigger = Window.Flags["Trigger/Enabled"] and KeyDown end})
-
-            TriggerSection:Toggle({Name = "Always Enabled", Flag = "Trigger/AlwaysEnabled", Value = false})
-            TriggerSection:Toggle({Name = "Hold Mouse Button", Flag = "Trigger/HoldMouseButton", Value = false})
-            TriggerSection:Toggle({Name = "Prediction", Flag = "Trigger/Prediction", Value = true})
-
-            --TriggerSection:Toggle({Name = "Team Check", Flag = "Trigger/TeamCheck", Value = false})
-            TriggerSection:Toggle({Name = "Distance Check", Flag = "Trigger/DistanceCheck", Value = false})
-            TriggerSection:Toggle({Name = "Visibility Check", Flag = "Trigger/VisibilityCheck", Value = false})
-
-            TriggerSection:Slider({Name = "Click Delay", Flag = "Trigger/Delay", Min = 0, Max = 1, Precise = 2, Value = 0.15, Unit = "sec"})
-            TriggerSection:Slider({Name = "Distance Limit", Flag = "Trigger/DistanceLimit", Min = 25, Max = 10000, Value = 250, Unit = "studs"})
-            TriggerSection:Slider({Name = "Field Of View", Flag = "Trigger/FOV/Radius", Min = 0, Max = 500, Value = 25, Unit = "r"})
-
-            local PriorityList, BodyPartsList = {{Name = "Closest", Mode = "Button", Value = true}, {Name = "Random", Mode = "Button"}}, {}
-            for Index, Value in pairs(KnownBodyParts) do
-                PriorityList[#PriorityList + 1] = {Name = Value[1], Mode = "Button", Value = false}
-                BodyPartsList[#BodyPartsList + 1] = {Name = Value[1], Mode = "Toggle", Value = Value[2]}
-            end
-
-            TriggerSection:Dropdown({Name = "Priority", Flag = "Trigger/Priority", List = PriorityList})
-            TriggerSection:Dropdown({Name = "Body Parts", Flag = "Trigger/BodyParts", List = BodyPartsList})
-        end
-        local TFOVSection = CombatTab:Section({Name = "Trigger FOV Circle", Side = "Left"}) do
-            TFOVSection:Toggle({Name = "Enabled", Flag = "Trigger/FOV/Enabled", Value = true})
-            TFOVSection:Toggle({Name = "Filled", Flag = "Trigger/FOV/Filled", Value = false})
-            TFOVSection:Colorpicker({Name = "Color", Flag = "Trigger/FOV/Color", Value = {0.0833333358168602, 0.6666666269302368, 1, 0.25, false}})
-            TFOVSection:Slider({Name = "NumSides", Flag = "Trigger/FOV/NumSides", Min = 3, Max = 100, Value = 14})
-            TFOVSection:Slider({Name = "Thickness", Flag = "Trigger/FOV/Thickness", Min = 1, Max = 10, Value = 2})
-        end
     end
     local VisualsSection = Parvus.Utilities:ESPSection(Window, "Visuals", "ESP/Player", true, true, true, true, true, false) do
         VisualsSection:Colorpicker({Name = "Ally Color", Flag = "ESP/Player/Ally", Value = {0.3333333432674408, 0.6666666269302368, 1, 0, false}})
@@ -404,98 +371,6 @@ local Window = Parvus.Utilities.UI:Window({
             RecoilSection:Slider({Name = "KickUp Force", Flag = "AR2/Recoil/KickUpForce", Min = 0, Max = 100, Value = 0, Unit = "%"})
             RecoilSection:Slider({Name = "Bob Force", Flag = "AR2/Bob/Force", Min = 0, Max = 100, Value = 0, Unit = "%"})
             RecoilSection:Slider({Name = "Bob Damping", Flag = "AR2/Bob/Damping", Min = 0, Max = 100, Value = 0, Unit = "%"})]]
-        end
-        local VehSection = MiscTab:Section({Name = "Vehicle", Side = "Left"}) do
-            VehSection:Toggle({Name = "Enabled", Flag = "AR2/Vehicle/Enabled", Value = false})
-            VehSection:Toggle({Name = "No Impact", Flag = "AR2/Vehicle/Impact", Value = false})
-            --VehSection:Toggle({Name = "Fly", Flag = "AR2/Vehicle/Fly", Value = false})
-            VehSection:Toggle({Name = "Instant Action", Flag = "AR2/Vehicle/Instant", Value = false})
-            VehSection:Slider({Name = "Max Speed", Flag = "AR2/Vehicle/MaxSpeed", Min = 0, Max = 500, Value = 100, Unit = "mph"})
-            --VehSection:Slider({Name = "Steer", Flag = "AR2/Vehicle/Steer", Min = 100, Max = 500, Value = 200})
-            --[[VehSection:Slider({Name = "Damping", Flag = "AR2/Vehicle/Damping", Min = 0, Max = 200, Value = 100})
-            VehSection:Slider({Name = "Velocity", Flag = "AR2/Vehicle/Velocity", Min = 0, Max = 200, Value = 100})]]
-        end
-        --[[local TargetSection = MiscTab:Section({Name = "Target", Side = "Right"}) do
-            local PlayerDropdown = TargetSection:Dropdown({Name = "Player List",
-            IgnoreFlag = true, Flag = "AR2/Teleport/List"})
-            PlayerDropdown:RefreshToPlayers(false)
-
-            TargetSection:Button({Name = "Refresh", Callback = function()
-                PlayerDropdown:RefreshToPlayers(false)
-            end})
-
-            TargetSection:Button({Name = "Teleport", Callback = function()
-                if Window.Flags["AR2/Teleport/Loop"] then return end
-                TeleportBypass = true
-                while task.wait() do
-                    if not Teleport(PlayerDropdown.Value[1]) then
-                        Parvus.Utilities.UI:Toast({Title = "Teleport Ended", Duration = 5})
-                        TeleportBypass = false break
-                    end
-                end
-            end})
-
-            TargetSection:Toggle({Name = "Loop Teleport", Flag = "AR2/Teleport/Loop", Value = false}):Keybind()
-            TargetSection:Slider({Name = "Teleport Speed", Flag = "AR2/Teleport/Speed", Min = 1, Max = 50, Value = 20, Unit = "studs", Wide = true})
-            TargetSection:Button({Name = "TP Zombies", Callback = function()
-                local OldAntiZombie = Window:GetValue("AR2/AntiZombie/Enabled")
-                Window:SetValue("AR2/AntiZombie/Enabled", false)
-
-                local Closest = GetCharactersInRadius(Zombies.Mobs, 250)
-                if not Closest then return end
-                for Index, Character in pairs(Closest) do
-                    if isnetworkowner(Character.PrimaryPart) then
-                        task.spawn(function()
-                            while task.wait() do
-                                if not Character then print("no char") break end
-                                if not Character.PrimaryPart then print("no char pp") break end
-                                Character.PrimaryPart.Anchored = false
-
-                                if not PlayerDropdown.Value[1] then print("no plr") break end
-                                local TargetPlayer = PlayerService:FindFirstChild(PlayerDropdown.Value[1])
-                                if not TargetPlayer then print("no plr obj") break end
-                                if not TargetPlayer.Character then print("no plr char") break end
-                                local Back = TargetPlayer.Character.PrimaryPart.CFrame * Vector3.new(0, 0, 12)
-                                Character.PrimaryPart.CFrame = CFrame.new(Back, TargetPlayer.Character.PrimaryPart.Position - Back)
-                                if not isnetworkowner(Character.PrimaryPart) then print("teleported", Character) break end
-                            end
-                        end)
-                    end
-                end
-
-                Window:SetValue("AR2/AntiZombie/Enabled", OldAntiZombie)
-            end})
-        end]]
-        local CharSection = MiscTab:Section({Name = "Character", Side = "Right"}) do
-            CharSection:Toggle({Name = "Fly Enabled", Flag = "AR2/Fly/Enabled", Value = false}):Keybind({Flag = "AR2/Fly/Keybind"})
-            CharSection:Slider({Name = "", Flag = "AR2/Fly/Speed", Min = 0, Max = 10, Precise = 1, Value = 0.7, Unit = "studs", Wide = true})
-            --CharSection:Divider()
-            CharSection:Toggle({Name = "Walk Speed", Flag = "AR2/WalkSpeed/Enabled", Value = false}):Keybind({Flag = "AR2/WalkSpeed/Keybind"})
-            CharSection:Slider({Name = "", Flag = "AR2/WalkSpeed/Speed", Min = 0, Max = 1.4, Precise = 1, Value = 0.7, Unit = "studs", Wide = true})
-            --CharSection:Divider()
-            CharSection:Toggle({Name = "Jump Height", Flag = "AR2/JumpHeight/Enabled", Value = false}):Keybind({Flag = "AR2/JumpHeight/Keybind"})
-            CharSection:Toggle({Name = "Infinite Jump", Flag = "AR2/JumpHeight/NoFallCheck", Value = false})
-            CharSection:Toggle({Name = "No Fall Impact", Flag = "AR2/NoFallImpact", Value = false})
-            CharSection:Toggle({Name = "No Jump Debounce", Flag = "AR2/NoJumpDebounce", Value = false})
-            CharSection:Slider({Name = "", Flag = "AR2/JumpHeight/Height", Min = 4.8, Max = 100, Precise = 1, Value = 4.8, Unit = "studs", Wide = true})
-            --CharSection:Divider()
-            CharSection:Toggle({Name = "Use In Air/Water", Flag = "AR2/UseInAir", Value = false})
-            --CharSection:Toggle({Name = "Use In Water", Flag = "AR2/UseInWater", Value = false})
-            CharSection:Toggle({Name = "Fast Respawn", Flag = "AR2/FastRespawn", Value = false})
-            --[[CharSection:Toggle({Name = "Play Dead", Flag = "AR2/PlayDead", IgnoreFlag = true, Value = false,
-            Callback = function(Bool)
-                if not PlayerClass.Character then return end
-                if Bool then PlayerClass.Character.Animator:PlayAnimationReplicated("Death.Standing Forwards", true)
-                else PlayerClass.Character.Animator:StopAnimationReplicated("Death.Standing Forwards", true) end
-            end})]]
-            CharSection:Button({Name = "Respawn", Callback = function()
-                task.spawn(function() SetIdentity(2)
-                    PlayerClass:UnloadCharacter()
-                    Interface:Hide("Reticle")
-                    task.wait(0.5)
-                    PlayerClass:LoadCharacter()
-                end)
-            end}):Tooltip("You will lose loot")
         end
         local MiscSection = MiscTab:Section({Name = "Other", Side = "Right"}) do
 
