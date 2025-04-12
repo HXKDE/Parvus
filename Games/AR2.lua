@@ -57,26 +57,26 @@ local Firearm = nil
 task.spawn(function() setthreadidentity(2) Firearm = require(ReplicatedStorage.Client.Abstracts.ItemInitializers.Firearm) end)
 if not Firearm then LocalPlayer:Kick("Send this error to owner: Firearm module does not exist") return end
 local CharacterCamera = Cameras:GetCamera("Character")
---local ReticleInterface = Interface:Get("Reticle")
+local ReticleInterface = Interface:Get("Reticle")
 
 local Events = getupvalue(Network.Add, 1)
---local EventsQueue = getupvalue(Network.Add, 2)
+local EventsQueue = getupvalue(Network.Add, 2)
 local GetSpreadAngle = getupvalue(Bullets.Fire, 1)
 local GetSpreadVector = getupvalue(Bullets.Fire, 3)
 local CastLocalBullet = getupvalue(Bullets.Fire, 4)
 local GetFireImpulse = getupvalue(Bullets.Fire, 6)
 local LightingState = getupvalue(Lighting.GetState, 1)
---local RenderSettings = getupvalue(World.GetDistance, 1)
+local RenderSettings = getupvalue(World.GetDistance, 1)
 local AnimatedReload = getupvalue(Firearm, 7)
 
 local SetWheelSpeeds = getupvalue(VehicleController.Step, 2)
 local SetSteerWheels = getupvalue(VehicleController.Step, 3)
---local ApplyDragForce = getupvalue(VehicleController.Step, 4)
+local ApplyDragForce = getupvalue(VehicleController.Step, 4)
 
 local Effects = getupvalue(CastLocalBullet, 2)
 local Sounds = getupvalue(CastLocalBullet, 3)
 local ImpactEffects = getupvalue(CastLocalBullet, 6)
---local TryRicochet = getupvalue(CastLocalBullet, 10)
+local TryRicochet = getupvalue(CastLocalBullet, 10)
 
 if type(Events) == "function" then
     Events = getupvalue(Network.Add, 2)
@@ -115,10 +115,10 @@ RemoveObject.Event:Connect(function(...)
     Parvus.Utilities.Drawing:RemoveObject(...)
 end)
 
---RenderSettings.Loot = 1
---RenderSettings.Elements = 1
---RenderSettings.Detail = -1
---RenderSettings.Terrain = 36
+RenderSettings.Loot = 1
+RenderSettings.Elements = 1
+RenderSettings.Detail = -1
+RenderSettings.Terrain = 36
 
 -- game data mess
 local RandomEvents, ItemCategory, ZombieInherits, SanityBans, AdminRoles = {
